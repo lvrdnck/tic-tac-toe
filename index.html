@@ -858,7 +858,12 @@
             theme: 'classic',
             soundEnabled: true,
             coachEnabled: true,
-            achievements: []
+            achievements: [],
+            trainerStats: {
+                solved: 0,
+                streak: 0
+            },
+            trainerCursor: 0
         };
 
         const cellNames = [
@@ -885,6 +890,37 @@
             [2, 4, 6]
         ];
 
+        const tacticalPuzzles = [
+            {
+                title: 'Finish the row',
+                prompt: 'X has a direct win on the top row.',
+                board: ['X', 'X', '', 'O', 'O', '', '', '', ''],
+                player: 'X',
+                solution: 2
+            },
+            {
+                title: 'Block the row',
+                prompt: 'X must stop O from winning the top row.',
+                board: ['O', 'O', '', 'X', '', 'X', '', '', ''],
+                player: 'X',
+                solution: 2
+            },
+            {
+                title: 'Complete diagonal',
+                prompt: 'O can finish the long diagonal.',
+                board: ['O', 'X', 'X', '', 'O', '', '', '', ''],
+                player: 'O',
+                solution: 8
+            },
+            {
+                title: 'Win the column',
+                prompt: 'X can finish the left column.',
+                board: ['X', 'O', '', 'X', 'O', '', '', '', ''],
+                player: 'X',
+                solution: 6
+            }
+        ];
+
         const cells = [...document.querySelectorAll('.cell')];
         const gameBoard = document.getElementById('gameBoard');
         const statusDisplay = document.getElementById('status');
@@ -893,6 +929,7 @@
         const undoBtn = document.getElementById('undoBtn');
         const hintBtn = document.getElementById('hintBtn');
         const replayBtn = document.getElementById('replayBtn');
+        const puzzleBtn = document.getElementById('puzzleBtn');
         const resetMatchBtn = document.getElementById('resetMatchBtn');
         const aiModeBtn = document.getElementById('aiMode');
         const localModeBtn = document.getElementById('localMode');
@@ -921,6 +958,10 @@
         const optimalStat = document.getElementById('optimalStat');
         const badgeStat = document.getElementById('badgeStat');
         const coachNote = document.getElementById('coachNote');
+        const trainerPuzzleStat = document.getElementById('trainerPuzzleStat');
+        const trainerSolvedStat = document.getElementById('trainerSolvedStat');
+        const trainerStreakStat = document.getElementById('trainerStreakStat');
+        const trainerNote = document.getElementById('trainerNote');
         const achievementList = document.getElementById('achievementList');
         const historyList = document.getElementById('historyList');
         const celebrationLayer = document.getElementById('celebrationLayer');
@@ -930,7 +971,9 @@
             { id: 'first-win', label: 'First Win' },
             { id: 'perfect-round', label: 'Perfect Round' },
             { id: 'strategist', label: 'Strategist' },
-            { id: 'match-winner', label: 'Match Winner' }
+            { id: 'match-winner', label: 'Match Winner' },
+            { id: 'puzzle-solver', label: 'Puzzle Solver' },
+            { id: 'puzzle-streak', label: 'Puzzle Streak' }
         ];
 
         const storedState = loadStoredState();
@@ -956,6 +999,11 @@
         let soundEnabled = storedState.soundEnabled;
         let coachEnabled = storedState.coachEnabled;
         let achievements = [...storedState.achievements];
+        let trainerStats = { ...storedState.trainerStats };
+        let trainerCursor = storedState.trainerCursor;
+        let trainerActive = false;
+        let trainerPuzzle = null;
+        let trainerFeedback = 'Load a tactical puzzle.';
         let matchComplete = false;
         let isReplaying = false;
         let replayStep = null;
