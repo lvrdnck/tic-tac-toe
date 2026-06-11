@@ -275,7 +275,7 @@
 
         .board-actions {
             display: grid;
-            grid-template-columns: repeat(5, minmax(0, 1fr));
+            grid-template-columns: repeat(6, minmax(0, 1fr));
             gap: 10px;
         }
 
@@ -648,6 +648,7 @@
                 <button id="undoBtn" class="secondary" type="button">Undo</button>
                 <button id="hintBtn" class="secondary" type="button">Hint</button>
                 <button id="replayBtn" class="secondary" type="button">Replay</button>
+                <button id="puzzleBtn" class="secondary" type="button">Puzzle</button>
                 <button id="resetMatchBtn" class="danger" type="button">Reset Match</button>
             </div>
         </section>
@@ -800,6 +801,25 @@
                     </div>
                 </div>
                 <div class="coach-note" id="coachNote">No coached moves yet.</div>
+            </section>
+
+            <section class="panel-section full-width">
+                <span class="section-title">Trainer</span>
+                <div class="analysis-grid">
+                    <div class="stat">
+                        <span>Puzzle</span>
+                        <strong id="trainerPuzzleStat">Ready</strong>
+                    </div>
+                    <div class="stat">
+                        <span>Solved</span>
+                        <strong id="trainerSolvedStat">0</strong>
+                    </div>
+                    <div class="stat">
+                        <span>Streak</span>
+                        <strong id="trainerStreakStat">0</strong>
+                    </div>
+                </div>
+                <div class="coach-note" id="trainerNote">Load a tactical puzzle.</div>
             </section>
 
             <section class="panel-section full-width">
